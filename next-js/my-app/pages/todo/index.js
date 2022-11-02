@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import TodoItem from '../../components/todo/TodoItem';
 
 export default function todo() {
@@ -17,6 +17,12 @@ export default function todo() {
             checked: false
         }
     ])
+
+    const [filterTodos, setFilterTodos] = useState([]);
+
+    useEffect(() => {
+        setFilterTodos(todos);
+    }, []);
 
     const [inputs, setInputs] = useState({});
 
@@ -43,8 +49,30 @@ export default function todo() {
         setTodos(todosUpdate);
     }
 
-    const checkedTodo = (todo_id) => {
+    const checkedTodo = (todo_id, todo) => {
+        let index = todos.findIndex((item) => item.id == todo_id);
+        const newTodos = [...todos];
+        newTodos[index] = todo;
+        setTodos(newTodos);
 
+    }
+
+    //filter
+    const eventFilterTodos = (e) => {
+        let status = e.target.value;
+        let data;
+        switch(status) {
+            case 'checked':
+                data = todos.filter((item) => item.checked == true);
+                setFilterTodos(data);
+              break;
+            case 'unchecked':
+                data = todos.filter((item) => item.checked == false);
+                setFilterTodos(data);
+              break;
+            default:
+                setFilterTodos(todos);
+          }
     }
 
     return (
@@ -57,9 +85,12 @@ export default function todo() {
                         <button className="flex-no-shrink p-2 border-2 rounded text-teal border-teal hover:text-white hover:bg-teal" onClick={newTodo}>Add</button>
                     </div>
                 </div>
+                <button type="button" value="all" onClick={eventFilterTodos}  className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">All</button>
+                <button type="button" value="checked" onClick={eventFilterTodos} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Checked</button>
+                <button type="button" value="unchecked" onClick={eventFilterTodos} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Unchecked</button>
                 <div>
-                    {todos.map(item => (
-                        <TodoItem key={item.id} todo={item} deleteTodo={deleteTodo}  />
+                    {filterTodos.map(item => (
+                        <TodoItem key={item.id} todo={item} deleteTodo={deleteTodo} checkedTodo={checkedTodo} />
                     ))}
                 </div>
             </div>

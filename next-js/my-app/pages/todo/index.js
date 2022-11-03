@@ -22,7 +22,7 @@ export default function todo() {
 
     useEffect(() => {
         setFilterTodos(todos);
-    }, []);
+    }, [todos]);
 
     const [inputs, setInputs] = useState({});
 

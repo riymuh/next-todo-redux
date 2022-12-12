@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export default function formCreate({value, updateValue}) {
+export default function formCreate({name, value, placeholder, updateValue}) {
     
     const  handleChange = (event) => {
         const name  = event.target.name;
@@ -10,6 +10,6 @@ export default function formCreate({value, updateValue}) {
     }
 
     return (
-        <input className="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker" placeholder="Add Todo" name="todo" value={value} onChange={handleChange} />
+        <input className="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker" placeholder={placeholder} name={name} value={value} onChange={handleChange} />
     )
 }

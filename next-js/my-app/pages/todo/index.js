@@ -3,18 +3,22 @@ import { useState, useEffect } from 'react'
 import TodoItem from '../../components/todo/TodoItem';
 import InputString from './__partials/InputString';
 import AddButton from './__partials/AddButton';
+import FilterButton from './__partials/FilterButton';
 
 export default function todo() {
+    const TITLE = "TODO LIST"
     const [todos, setTodos] = useState([
         {
             id: 1,
             todo: 'sapu rumah',
+            createdBy: 'riyadh',
             published: false,
             checked: false
         },
         {
             id: 2,
             todo: 'bersih wc',
+            createdBy: 'riyadh 2',
             published: false,
             checked: false
         }
@@ -22,10 +26,12 @@ export default function todo() {
 
     const [body, setBody] = useState({
         todo: "",
+        createdBy: "",
         date: "",
         createdAt: ""
     });
 
+    //set object value
     const updateBody = (name, value) => {
         //setItem(item => ({...item, ['value']: ''}))
         setBody(item => ({...item, [name]: value}))
@@ -36,30 +42,21 @@ export default function todo() {
     useEffect(() => {
         setFilterTodos(todos);
     }, [todos]);
-    
-    const updateChange = (item) =>
-    {
-        let newTodo = {
-            id:todos.length+1,
-            todo: body.todo,
-            published: false,
-            checked: false
-        }
-
-        setTodos((todo) => [...todo, newTodo]);
-    }
 
     const createFunction = (item) =>
     {
         let newTodo = {
             id:todos.length+1,
             todo: body.todo,
+            createdBy: body.createdBy, 
             published: false,
             checked: false
         }
 
         setTodos((todo) => [...todo, newTodo]);
+        //set null object
         setBody(item => ({...item, ['todo']: ''}))
+        setBody(item => ({...item, ['createdBy']: ''}))
     }
 
     const deleteTodo = (todo_id) => {
@@ -75,8 +72,9 @@ export default function todo() {
     }
 
     //filter
-    const eventFilterTodos = (e) => {
-        let status = e.target.value;
+    const eventFilterTodos = (value) => {
+        // let status = e.target.value;
+        let status = value;
         let data;
         switch(status) {
             case 'checked':
@@ -96,16 +94,17 @@ export default function todo() {
         <div className="h-100 w-full flex items-center justify-center bg-teal-lightest font-sans">
             <div className="bg-white rounded shadow p-6 m-4 w-full lg:w-3/4 lg:max-w-lg">
                 <div className="mb-4">
-                    <h1 className="text-grey-darkest">Todo List</h1>
+                    <h1 className="text-grey-darkest">{TITLE}</h1>
                     <div className="flex mt-4">
-                        <InputString value={body.todo} updateValue={updateBody}  />
+                        <InputString value={body.todo} updateValue={updateBody} name="todo" placeholder="todo name"  />
+                        <InputString value={body.createdBy} updateValue={updateBody} name="createdBy" placeholder="created by"  />
                         <AddButton createFunction={createFunction} />
                     </div>
-
                 </div>
-                <button type="button" value="all" onClick={eventFilterTodos}  className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">All</button>
-                <button type="button" value="checked" onClick={eventFilterTodos} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Checked</button>
-                <button type="button" value="unchecked" onClick={eventFilterTodos} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Unchecked</button>
+                {/* <button type="button" value="all" onClick={eventFilterTodos}  className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">All</button> */}
+                <FilterButton type="button" updateFilter={eventFilterTodos} value="all" label="All" style="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" />
+                <FilterButton type="button" updateFilter={eventFilterTodos} value="checked" label="Checked" style="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" />
+                <FilterButton type="button" updateFilter={eventFilterTodos} value="unchecked" label="Unchecked" style="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" />
                 <div>
                     {filterTodos.map(item => (
                         <TodoItem key={item.id} todo={item} deleteTodo={deleteTodo} checkedTodo={checkedTodo} />

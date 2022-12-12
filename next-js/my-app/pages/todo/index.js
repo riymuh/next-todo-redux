@@ -1,47 +1,65 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import TodoItem from '../../components/todo/TodoItem';
+import InputString from './__partials/InputString';
+import AddButton from './__partials/AddButton';
 
 export default function todo() {
     const [todos, setTodos] = useState([
         {
             id: 1,
-            task: 'sapu rumah',
+            todo: 'sapu rumah',
             published: false,
             checked: false
         },
         {
             id: 2,
-            task: 'bersih wc',
+            todo: 'bersih wc',
             published: false,
             checked: false
         }
     ])
+
+    const [body, setBody] = useState({
+        todo: "",
+        date: "",
+        createdAt: ""
+    });
+
+    const updateBody = (name, value) => {
+        //setItem(item => ({...item, ['value']: ''}))
+        setBody(item => ({...item, [name]: value}))
+    }
 
     const [filterTodos, setFilterTodos] = useState([]);
 
     useEffect(() => {
         setFilterTodos(todos);
     }, [todos]);
-
-    const [inputs, setInputs] = useState({});
-
-    const handleChange = (event) => {
-        const name  = event.target.name;
-        const value = event.target.value;
-        setInputs(values => ({...values, [name]: value}))
-    }
-
-    const newTodo = () =>
+    
+    const updateChange = (item) =>
     {
         let newTodo = {
             id:todos.length+1,
-            task: inputs.task,
+            todo: body.todo,
             published: false,
             checked: false
         }
-        setInputs(values => ({...values, ['task']: ''}))
+
         setTodos((todo) => [...todo, newTodo]);
+    }
+
+    const createFunction = (item) =>
+    {
+        let newTodo = {
+            id:todos.length+1,
+            todo: body.todo,
+            published: false,
+            checked: false
+        }
+
+        setTodos((todo) => [...todo, newTodo]);
+        setBody(item => ({...item, ['todo']: ''}))
     }
 
     const deleteTodo = (todo_id) => {
@@ -54,7 +72,6 @@ export default function todo() {
         const newTodos = [...todos];
         newTodos[index] = todo;
         setTodos(newTodos);
-
     }
 
     //filter
@@ -81,9 +98,10 @@ export default function todo() {
                 <div className="mb-4">
                     <h1 className="text-grey-darkest">Todo List</h1>
                     <div className="flex mt-4">
-                        <input className="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker" placeholder="Add Todo" name="task" value={inputs.task} onChange={handleChange} />
-                        <button className="flex-no-shrink p-2 border-2 rounded text-teal border-teal hover:text-white hover:bg-teal" onClick={newTodo}>Add</button>
+                        <InputString value={body.todo} updateValue={updateBody}  />
+                        <AddButton createFunction={createFunction} />
                     </div>
+
                 </div>
                 <button type="button" value="all" onClick={eventFilterTodos}  className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">All</button>
                 <button type="button" value="checked" onClick={eventFilterTodos} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Checked</button>

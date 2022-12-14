@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useState, useEffect } from 'react'
 import TodoItem from '../../components/todo/TodoItem';
 import InputString from './__partials/InputString';
@@ -23,6 +23,8 @@ export default function todo() {
             checked: false
         }
     ])
+
+    const todoRef = useRef();
 
     const [body, setBody] = useState({
         todo: "",
@@ -95,9 +97,24 @@ export default function todo() {
             <div className="bg-white rounded shadow p-6 m-4 w-full lg:w-3/4 lg:max-w-lg">
                 <div className="mb-4">
                     <h1 className="text-grey-darkest">{TITLE}</h1>
-                    <div className="flex mt-4">
-                        <InputString value={body.todo} updateValue={updateBody} name="todo" placeholder="todo name"  />
-                        <InputString value={body.createdBy} updateValue={updateBody} name="createdBy" placeholder="created by"  />
+                    <div className="mt-4">
+                        <InputString 
+                            value={body.todo} 
+                            refer={todoRef} 
+                            updateValue={updateBody} 
+                            name="todo" 
+                            placeholder="todo name" 
+                            errorMessage="todo should be 3-16 characters and should'nt include any special charaters" 
+                            pattern="[A-Za-z0-9]{3,16}$" 
+                            required={true}  />
+                        <InputString 
+                            value={body.createdBy} 
+                            updateValue={updateBody} 
+                            name="createdBy" 
+                            placeholder="created by" 
+                            errorMessage="Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character" 
+                            pattern="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/" 
+                            required={true}  />
                         <AddButton createFunction={createFunction} />
                     </div>
                 </div>

@@ -5,7 +5,7 @@ export default function AddButton({createFunction}) {
         createFunction();
     }
     return (
-        <button className="flex-no-shrink p-2 border-2 rounded text-teal border-teal hover:text-white hover:bg-teal" onClick={handleAction}>
+        <button className="flex-no-shrink p-2 mt-4 border-2 rounded text-teal border-teal hover:text-white hover:bg-teal" onClick={handleAction}>
             Add
         </button>
     )
